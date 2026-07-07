@@ -10,7 +10,8 @@
 **Стек:** pandas, numpy, re, rapidfuzz, scikit-learn (`StandardScaler`, `HDBSCAN`),
 pymorphy3, matplotlib, seaborn. Опционально umap-learn.
 
-**Единственная доп. зависимость:** `rapidfuzz` (быстрый Левенштейн). Ставим в venv.
+**Доп. зависимости:** `rapidfuzz` (быстрый Левенштейн), `umap-learn` (2D-проекция).
+Ставим в venv.
 
 Спек: `typos/discovery/CLUSTERING_PLAN.md`. Ноутбук строим секция за секцией; после
 каждой рабочей секции — коммит.
@@ -304,12 +305,47 @@ plt.title("Распределение типов запросов")
 plt.tight_layout(); plt.savefig("type_distribution.png", dpi=120); plt.show()
 ```
 
-- [ ] **Cell 20 (scatter, опционально):** t-SNE/UMAP по `X`, раскраска по `cluster`
-  (визуальная перепроверка, вариант C из спека). Если umap не встанет — `sklearn`
-  `TSNE(n_components=2)`.
-
 Проверка: `query_types.csv` создан, распределение типов правдоподобно.
 - [ ] Коммит: `feat: export query_types.csv and charts`.
+
+---
+
+## Задача 8: 2D-визуализация UMAP (вариант C из спека)
+
+- [ ] Поставить в venv: `pip install umap-learn`.
+- [ ] **Cell 21 (markdown):** проецируем 13-мерный вектор признаков в 2D, чтобы
+  глазами увидеть, отделяются ли кластеры и «шум». UMAP лучше сохраняет локальную
+  структуру, чем PCA; при неудаче установки — фолбэк на `sklearn` t-SNE.
+- [ ] **Cell 22 (project + scatter):**
+
+```python
+try:
+    import umap
+    reducer = umap.UMAP(n_neighbors=15, min_dist=0.1,
+                        n_components=2, metric="euclidean")
+    method = "UMAP"
+except ImportError:
+    from sklearn.manifold import TSNE
+    reducer = TSNE(n_components=2, perplexity=30, init="pca")
+    method = "t-SNE"
+
+emb2d = reducer.fit_transform(X)   # X — стандартизованные признаки sus_df
+sus_df["dim1"], sus_df["dim2"] = emb2d[:, 0], emb2d[:, 1]
+
+plt.figure(figsize=(9, 7))
+palette = sns.color_palette("tab20", sus_df["cluster"].nunique())
+sns.scatterplot(data=sus_df, x="dim1", y="dim2", hue="type",
+                s=14, linewidth=0, palette=palette, legend="full")
+plt.title(f"Запросы в 2D ({method}), цвет — тип дефекта")
+plt.legend(bbox_to_anchor=(1.02, 1), loc="upper left", fontsize=8)
+plt.tight_layout(); plt.savefig("clusters_2d.png", dpi=120); plt.show()
+```
+
+Проверка: точки одного типа тяготеют друг к другу; `clusters_2d.png` создан.
+Если типы сильно перемешаны — сигнал вернуться к признакам/параметрам HDBSCAN.
+- [ ] **Cell 23 (опционально):** раскраска того же scatter по `hue="cluster"` —
+  сравнить, совпадают ли визуальные сгустки с метками HDBSCAN.
+- [ ] Коммит: `feat: 2D UMAP visualization of clusters`.
 
 ---
 
