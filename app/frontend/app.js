@@ -6,6 +6,9 @@ const originalEl = document.getElementById("original");
 const correctedEl = document.getElementById("corrected");
 const categoriesBlock = document.getElementById("categories");
 const categoryList = document.getElementById("category-list");
+const productsBlock = document.getElementById("products");
+const productsStatus = document.getElementById("products-status");
+const productGrid = document.getElementById("product-grid");
 const errorEl = document.getElementById("error");
 
 function showError(message) {
@@ -13,6 +16,7 @@ function showError(message) {
   errorEl.hidden = false;
   resultBlock.hidden = true;
   categoriesBlock.hidden = true;
+  productsBlock.hidden = true;
 }
 
 function renderCorrection(data) {
@@ -45,6 +49,53 @@ function renderCategories(categories) {
   categoriesBlock.hidden = false;
 }
 
+function renderProducts(data) {
+  productGrid.replaceChildren();
+  if (data.products.length === 0) {
+    productsStatus.textContent = "Релевантных товаров не найдено";
+    return;
+  }
+  productsStatus.textContent = data.reached_cap
+    ? "Показаны все найденные релевантные"
+    : `Найдено релевантных: ${data.products.length}`;
+  data.products.forEach((p) => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    const name = document.createElement("div");
+    name.className = "product-name";
+    name.textContent = p.item_name;
+    card.append(name);
+    if (p.category4) {
+      const cat = document.createElement("div");
+      cat.className = "product-cat";
+      cat.textContent = p.category4;
+      card.append(cat);
+    }
+    productGrid.append(card);
+  });
+}
+
+async function fetchProducts(query) {
+  productsBlock.hidden = false;
+  productsStatus.textContent = "Подбираем товары…";
+  productGrid.replaceChildren();
+  try {
+    const response = await fetch("/api/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      productsStatus.textContent = data.error || "Не удалось подобрать товары";
+      return;
+    }
+    renderProducts(data);
+  } catch (err) {
+    productsStatus.textContent = "Сеть недоступна: " + err.message;
+  }
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const query = queryInput.value.trim();
@@ -65,6 +116,7 @@ form.addEventListener("submit", async (event) => {
     errorEl.hidden = true;
     renderCorrection(data);
     renderCategories(data.categories);
+    fetchProducts(query);
   } catch (err) {
     showError("Сеть недоступна: " + err.message);
   } finally {
