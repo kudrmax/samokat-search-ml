@@ -1,6 +1,6 @@
-# Веб-приложение «Исправление опечаток + категория»
+# Веб-приложение «Опечатки → категория → товары»
 
-Демо пайплайна: запрос → исправление опечаток → топ-3 категории верхнего уровня.
+Демо пайплайна: запрос → исправление опечаток → топ-3 категории верхнего уровня → сетка релевантных товаров (ESCI).
 
 ## Подготовка модели (разово)
 
@@ -35,7 +35,10 @@ python -m pytest -v
 - `train_classifier.py` — офлайн-обучение KNN, сохранение артефактов.
 - `backend/pipeline/corrector.py` — исправление опечаток (SymSpell).
 - `backend/pipeline/classifier.py` — эмбеддер + KNN, топ-3 категории.
-- `backend/main.py` — FastAPI: `/api/correct`, `/api/analyze`, раздача фронтенда.
-- `frontend/` — статическая страница.
+- `backend/pipeline/catalog.py` — каталог товаров из DATA.csv (без final_answer).
+- `backend/pipeline/relevance.py` — разметка релевантности через esci_classifier_module.
+- `backend/main.py` — FastAPI: `/api/correct`, `/api/analyze`, `/api/products`, раздача фронтенда.
+- `frontend/` — статическая страница (исправление, категории, сетка товаров).
 
-Данные: `samokat/DATA.csv`, словарь `samokat/data/domain_dictionary.txt`.
+Данные: `samokat/DATA.csv`, словарь `samokat/data/domain_dictionary.txt`,
+модуль релевантности: `samokat/esci/esci_classifier_module/` (не в git).
