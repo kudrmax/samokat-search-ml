@@ -5,3 +5,8 @@ symspellpy
 marisa-trie
 httpx
 pytest
+sentence-transformers
+scikit-learn
+joblib
+regex
+pandas
