@@ -31,3 +31,24 @@ def test_correct_response_holds_words():
         words=[WordCorrection(original="кросчовки", corrected="кроссовки")],
     )
     assert resp.words[0].corrected == "кроссовки"
+
+
+def test_category_score_fields():
+    from backend.models import CategoryScore
+
+    cs = CategoryScore(name="безалкогольные напитки", score=1.0)
+    assert cs.name == "безалкогольные напитки"
+    assert cs.score == 1.0
+
+
+def test_analyze_response_holds_categories():
+    from backend.models import AnalyzeResponse, CategoryScore, WordCorrection
+
+    resp = AnalyzeResponse(
+        original="кола",
+        corrected="кола",
+        words=[WordCorrection(original="кола", corrected="кола")],
+        categories=[CategoryScore(name="безалкогольные напитки", score=1.0)],
+    )
+    assert resp.categories[0].name == "безалкогольные напитки"
+    assert resp.words[0].changed is False

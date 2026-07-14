@@ -25,3 +25,15 @@ class CorrectResponse(BaseModel):
     original: str
     corrected: str
     words: list[WordCorrection]
+
+
+class CategoryScore(BaseModel):
+    name: str
+    score: float
+
+
+class AnalyzeResponse(BaseModel):
+    original: str
+    corrected: str
+    words: list[WordCorrection]
+    categories: list[CategoryScore]
