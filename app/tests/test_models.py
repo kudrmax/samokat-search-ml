@@ -52,3 +52,26 @@ def test_analyze_response_holds_categories():
     )
     assert resp.categories[0].name == "безалкогольные напитки"
     assert resp.words[0].changed is False
+
+
+def test_product_defaults_category4_none():
+    from backend.models import Product
+
+    p = Product(item_name="Молоко 3.2%")
+    assert p.item_name == "Молоко 3.2%"
+    assert p.category4 is None
+
+
+def test_products_response_fields():
+    from backend.models import Product, ProductsResponse
+
+    resp = ProductsResponse(
+        category="молочная продукция",
+        products=[Product(item_name="Молоко", category4="молоко питьевое")],
+        scanned=23,
+        reached_cap=False,
+    )
+    assert resp.category == "молочная продукция"
+    assert resp.products[0].category4 == "молоко питьевое"
+    assert resp.scanned == 23
+    assert resp.reached_cap is False

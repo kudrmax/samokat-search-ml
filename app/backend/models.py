@@ -37,3 +37,15 @@ class AnalyzeResponse(BaseModel):
     corrected: str
     words: list[WordCorrection]
     categories: list[CategoryScore]
+
+
+class Product(BaseModel):
+    item_name: str
+    category4: str | None = None
+
+
+class ProductsResponse(BaseModel):
+    category: str
+    products: list[Product]
+    scanned: int
+    reached_cap: bool
