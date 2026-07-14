@@ -1,3 +1,24 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><title>Исправление опечаток</title></head>
-<body></body></html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Исправление опечаток</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>Исправление опечаток</h1>
+    <form id="form" class="form">
+      <input id="query" class="input" type="text" placeholder="Введите поисковый запрос" autocomplete="off" autofocus>
+      <button id="submit" class="button" type="submit">Проверить</button>
+    </form>
+    <section id="result" class="result" hidden>
+      <div class="row"><span class="label">Запрос</span><span id="original" class="value"></span></div>
+      <div class="row"><span class="label">Исправлено</span><span id="corrected" class="value"></span></div>
+    </section>
+    <p id="error" class="error" hidden></p>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
