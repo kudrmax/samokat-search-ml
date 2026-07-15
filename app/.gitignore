@@ -2,3 +2,5 @@ models/
 __pycache__/
 .pytest_cache/
 *.pyc
+.uvicorn.pid
+.uvicorn.log
