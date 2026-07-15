@@ -36,7 +36,7 @@ from pathlib import Path
 import pytest
 
 MODELS_DIR = Path(__file__).resolve().parents[1] / "models"
-HAS_ARTIFACT = (MODELS_DIR / "category1_knn.joblib").exists() and (
+HAS_ARTIFACT = (MODELS_DIR / "category_cascade.joblib").exists() and (
     MODELS_DIR / "e5-small-en-ru"
 ).exists()
 
@@ -52,6 +52,7 @@ def test_analyze_endpoint_returns_correction_and_categories():
     assert len(body["words"]) == 2
     assert len(body["categories"]) == 3
     assert body["categories"][0]["score"] >= body["categories"][1]["score"]
+    assert all("subcategory" in c for c in body["categories"])
 
 
 @pytest.mark.skipif(not HAS_ARTIFACT, reason="нет артефакта модели (запусти train_classifier.py)")

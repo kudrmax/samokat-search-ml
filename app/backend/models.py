@@ -30,6 +30,7 @@ class CorrectResponse(BaseModel):
 class CategoryScore(BaseModel):
     name: str
     score: float
+    subcategory: str | None = None
 
 
 class AnalyzeResponse(BaseModel):

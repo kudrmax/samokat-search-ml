@@ -37,13 +37,35 @@ function renderCategories(categories) {
   categories.forEach((cat, index) => {
     const li = document.createElement("li");
     li.className = index === 0 ? "category category-main" : "category";
+
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "category-head";
+
+    const caret = document.createElement("span");
+    caret.className = "category-caret";
+    caret.textContent = "▸";
     const name = document.createElement("span");
     name.className = "category-name";
     name.textContent = cat.name;
     const score = document.createElement("span");
     score.className = "category-score";
     score.textContent = Math.round(cat.score * 100) + "%";
-    li.append(name, score);
+    head.append(caret, name, score);
+
+    const sub = document.createElement("div");
+    sub.className = "category-sub";
+    sub.hidden = true;
+    sub.textContent = cat.subcategory || "—";
+
+    head.addEventListener("click", () => {
+      const open = sub.hidden;
+      sub.hidden = !open;
+      caret.textContent = open ? "▾" : "▸";
+      li.classList.toggle("category-open", open);
+    });
+
+    li.append(head, sub);
     categoryList.append(li);
   });
   categoriesBlock.hidden = false;
