@@ -2,3 +2,6 @@
 /.obsidian
 /esci/.DS_Store
 /esci/esci_classifier_module/__pycache__
+
+# Большие веса модели — хранятся локально, не пушатся
+/esci/esci_classifier_module/model_package/e5_model/model.safetensors
