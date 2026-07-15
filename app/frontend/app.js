@@ -49,6 +49,26 @@ function renderCategories(categories) {
   categoriesBlock.hidden = false;
 }
 
+// Приглушённые пастельные плейсхолдеры вместо картинок товаров.
+const THUMB_PALETTE = [
+  ["#fce7ec", "🧴"],
+  ["#e6f1e9", "🥑"],
+  ["#e7eef8", "🧊"],
+  ["#fbefe1", "🍊"],
+  ["#f0eaf7", "🍇"],
+  ["#fcf6df", "🧀"],
+  ["#e9f4f4", "🫧"],
+  ["#f6e9e4", "🍞"],
+];
+
+function thumbFor(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+  }
+  return THUMB_PALETTE[hash % THUMB_PALETTE.length];
+}
+
 function renderProducts(data) {
   productGrid.replaceChildren();
   if (data.products.length === 0) {
@@ -61,16 +81,35 @@ function renderProducts(data) {
   data.products.forEach((p) => {
     const card = document.createElement("div");
     card.className = "product-card";
+
+    const [color, emoji] = thumbFor(p.item_name);
+    const thumb = document.createElement("div");
+    thumb.className = "product-thumb";
+    thumb.style.background = color;
+    const emojiEl = document.createElement("span");
+    emojiEl.className = "product-emoji";
+    emojiEl.textContent = emoji;
+    thumb.append(emojiEl);
+    card.append(thumb);
+
     const name = document.createElement("div");
     name.className = "product-name";
     name.textContent = p.item_name;
     card.append(name);
+
     if (p.category4) {
       const cat = document.createElement("div");
       cat.className = "product-cat";
       cat.textContent = p.category4;
       card.append(cat);
     }
+
+    const buy = document.createElement("button");
+    buy.type = "button";
+    buy.className = "buy-button";
+    buy.textContent = "Купить";
+    card.append(buy);
+
     productGrid.append(card);
   });
 }
