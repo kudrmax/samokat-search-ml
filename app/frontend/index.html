@@ -3,31 +3,46 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Исправление опечаток</title>
+  <title>Самокат · поиск</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <main class="card">
-    <h1>Исправление опечаток</h1>
-    <form id="form" class="form">
-      <input id="query" class="input" type="text" placeholder="Введите поисковый запрос" autocomplete="off" autofocus>
-      <button id="submit" class="button" type="submit">Проверить</button>
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo" href="/">самокат</a>
+      <span class="header-title">Умный поиск</span>
+    </div>
+  </header>
+
+  <main class="page">
+    <form id="form" class="search">
+      <span class="search-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line>
+        </svg>
+      </span>
+      <input id="query" class="search-input" type="text" placeholder="Найти товары" autocomplete="off" autofocus>
+      <button id="submit" class="search-cancel" type="submit">Найти</button>
     </form>
-    <section id="result" class="result" hidden>
+
+    <section id="result" class="panel" hidden>
       <div class="row"><span class="label">Запрос</span><span id="original" class="value"></span></div>
       <div class="row"><span class="label">Исправлено</span><span id="corrected" class="value"></span></div>
     </section>
-    <section id="categories" class="categories" hidden>
+
+    <section id="categories" class="panel" hidden>
       <span class="label">Категории</span>
       <ol id="category-list" class="category-list"></ol>
     </section>
+
     <section id="products" class="products" hidden>
-      <span class="label">Товары</span>
       <p id="products-status" class="products-status"></p>
       <div id="product-grid" class="product-grid"></div>
     </section>
+
     <p id="error" class="error" hidden></p>
   </main>
+
   <script src="/static/app.js"></script>
 </body>
 </html>
